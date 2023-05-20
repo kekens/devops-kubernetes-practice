@@ -10,7 +10,9 @@
 
 ### Создание и сборка web-приложения
 
-**1. Создание web-приложения с применением Python Flask, возвращающего Hello World**
+**1. Создание web-приложения с применением Python Flask**
+
+Приложение является достаточно простым - возвращает обычное 'Hello World' по пути контекста
 ```python
 from flask import Flask
 app = Flask(__name__)
@@ -19,7 +21,9 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello world!'
 ```
-**2. Создание Dockerfile, описывающего установку Flask, создание директории, копирование и запуск приложения**
+**2. Создание Dockerfile для web-приложения**
+
+Данный Dockerfile описывает установку Flask, создание рабочей директории, копирование и запуск приложения
 ```dockerfile
 # Базовый image
 FROM python:3.10-alpine
