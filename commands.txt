@@ -10,7 +10,7 @@ docker build -t ksbobryakov/client:1.0.0  -t ksbobryakov/client:latest .
 # Kubernetes
 export KUBECONFIG=$HOME/.kube/minikube
 
-kubectl apply --filename deployment-1.yaml --namespace default && kubespy trace deployment web
+kubectl apply --filename deployment-web.yaml --namespace default && kubespy trace deployment web
 kubectl rollout status deployment web --namespace default
 kubectl port-forward deployment/web 8080:8000
 kubectl get deployments.apps web --namespace default
