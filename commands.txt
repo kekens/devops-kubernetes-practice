@@ -1,0 +1,20 @@
+# Docker Server
+docker build -t ksbobryakov/server:1.0.0  -t ksbobryakov/server:latest .
+docker run -ti --rm --name server -p 8000:8000  ksbobryakov/server:1.0.0
+docker pull ksbobryakov/server:1.0.0
+
+# Docker Client
+docker build -t ksbobryakov/client:1.0.0  -t ksbobryakov/client:latest .
+
+
+# Kubernetes
+export KUBECONFIG=$HOME/.kube/minikube
+
+kubectl apply --filename deployment-1.yaml --namespace default && kubespy trace deployment web
+kubectl rollout status deployment web --namespace default
+kubectl port-forward deployment/web 8080:8000
+kubectl get deployments.apps web --namespace default
+
+# Update deployment
+kubespy trace deployment default/web
+kubectl patch deployment web --patch '{"spec":{"replicas":1}}' -n default

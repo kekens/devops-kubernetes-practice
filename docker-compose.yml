@@ -1,0 +1,54 @@
+# Версия API Docker compose
+version: "3"
+
+# Раздел, в котором описываются приложения (сервисы).
+services:
+
+  # Раздел для описания приложения 'server'.
+  server:
+
+    # Имя image tag
+    image: ksbobryakov/server:1.0.0
+ 
+    # Параметры сборки Docker image.
+    build: 
+      # Путь к Dockerfile,
+      context: server/
+
+    # Перенаправление портов из Docker container на host-машину.
+    ports:
+      - 8000:8000
+
+    # Имя user, используемого в image
+    user: "1001"
+
+    # Проверка готовности приложения к работе. Параметр "--spider" означает: не загружать url, 
+    # а только проверить его наличие.
+    healthcheck:
+        test: wget --no-verbose --tries=1 --spider http://localhost:8000 || exit 1
+        interval: 5s
+        timeout: 5s
+        retries: 5
+
+  # Раздел для описания приложения 'client'.
+  client:
+
+    image: ksbobryakov/client:1.0.0
+
+    build: 
+      context: client/
+
+    user: "1001"
+
+    network_mode: host
+
+    # Команда запуска приложения внутри container,
+    command: "python ./client.py"
+
+    # Зависимость от других сервисов,
+    depends_on:
+      # Сервис 'client' зависит от сервиса 'server'. 
+      # Прежде чем запустить 'client' необходимо дождаться запуска 'server'.
+      # Условием запуска сервиса 'server' является его healthcheck.
+      server:
+        condition: service_healthy
